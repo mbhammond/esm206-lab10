@@ -1,0 +1,88 @@
+---
+title: "beepboop"
+author: "Margaret Hammond"
+date: "11/29/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(janitor)
+library(usethis)
+
+library(beepr)
+library(praise)
+library(cowsay)
+library(paletteer)
+library(sf)
+```
+
+## beepr::beep()
+
+Use `beep()` to give yourself an audio alert.
+
+## for loop + beep
+
+```{r, eval = FALSE}
+for(i in rev(seq(1:9999))) {
+    print(paste(i, "bottles of beer on the wall"))
+}
+beep(4)
+```
+
+## praise is nice
+
+```{r}
+praise("${EXCLAMATION}!!! This code works ${adverb_manner}!")
+
+praise("Holy ${creating}, Batman - this code works ${ADVERB_MANNER}!")
+```
+
+## cowsay::say to have characters say something
+
+```{r}
+say("I love tacos!", by = "cow")
+```
+
+## usethis for everything
+
+R Project first, then git & GitHub repo. 
+
+- usethis::use_git()
+- usethis::use_github()
+
+## paletteer: aggregated color palettes
+
+```{r}
+storms %>% 
+  group_by(name) %>% 
+  summarize(min_pressure = min(pressure, na.rm = TRUE)) %>% 
+  slice_min(n = 10, min_pressure) %>% 
+  ggplot(aes(x = min_pressure, y = name)) +
+  geom_col(aes(fill = name)) +
+  scale_fill_paletteer_d("khroma::sunset") #"pkg::palette
+```
+
+## Map of Jornada LTER Vegetation
+
+```{r}
+jornada_veg <- read_sf("doc.kml") %>% 
+  select(Name) %>% 
+  clean_names()
+
+ggplot() +
+  geom_sf(data = jornada_veg, aes(fill = name), color = NA) +
+  theme_minimal() +
+  scale_fill_paletteer_d("ggthemes::manyeys")
+  
+# Update this map:
+# Each vegetation type has a different fill color
+# Update theme
+# Customize the color palette
+
+ggsave(filename = "my_awesome_jornada_map.png", width = 8, height = 5)
+```
+
+
